@@ -201,7 +201,6 @@ public class AHBottomNavigation extends FrameLayout {
 		}
 
 		notificationTextColor = ContextCompat.getColor(context, android.R.color.white);
-		bottomNavigationHeight = (int) resources.getDimension(R.dimen.bottom_navigation_height);
 
 		// Item colors
 		titleColorActive = ContextCompat.getColor(context, R.color.colorBottomNavigationAccent);
@@ -237,7 +236,7 @@ public class AHBottomNavigation extends FrameLayout {
 			Log.w(TAG, "The items list should not have more than 5 items");
 		}
 
-		int layoutHeight = (int) resources.getDimension(R.dimen.bottom_navigation_height);
+		int layoutHeight = getNavigationBarHeight();
 
 		removeAllViews();
 		views.clear();
@@ -340,7 +339,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		float height = resources.getDimension(R.dimen.bottom_navigation_height);
+		float height = getNavigationBarHeight();
 		float minWidth = resources.getDimension(R.dimen.bottom_navigation_min_width);
 		float maxWidth = resources.getDimension(R.dimen.bottom_navigation_max_width);
 
@@ -462,7 +461,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		float height = resources.getDimension(R.dimen.bottom_navigation_height);
+		float height = getNavigationBarHeight();
 		float minWidth = resources.getDimension(R.dimen.bottom_navigation_small_inactive_min_width);
 		float maxWidth = resources.getDimension(R.dimen.bottom_navigation_small_inactive_max_width);
 
@@ -1116,6 +1115,23 @@ public class AHBottomNavigation extends FrameLayout {
 	public void setTitleTextSizeInSp(float activeSize, float inactiveSize) {
 		this.titleActiveTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, activeSize, resources.getDisplayMetrics());
 		this.titleInactiveTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, inactiveSize, resources.getDisplayMetrics());
+		createItems();
+	}
+
+	/**
+	 * Get navigation bar height
+	 */
+	public int getNavigationBarHeight() {
+		return this.navigationBarHeight == 0 ? (int) resources.getDimension(R.dimen.bottom_navigation_height) : this.navigationBarHeight;
+	}
+
+	/**
+	 * Set navigation bar height in SP
+	 *
+	 +	 * @param height in sp
+	 */
+	public void setNavigationBarHeight(int height) {
+		this.navigationBarHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, height, resources.getDisplayMetrics());
 		createItems();
 	}
 
