@@ -307,13 +307,13 @@ public class AHBottomNavigation extends FrameLayout {
 			inactiveSize = titleInactiveTextSize;
 		}
 
-		for (int i = 0; i < items.size(); i++) {
+		int leni = items.size();
+		for (int i = 0; i < leni; i++) {
 			final boolean current = currentItem == i;
 			final int itemIndex = i;
 			AHBottomNavigationItem item = items.get(itemIndex);
 
 			View view = inflater.inflate(R.layout.bottom_navigation_item, this, false);
-			LinearLayout container = (LinearLayout) view.findViewById(R.id.bottom_navigation_container);
 			ImageView icon = (ImageView) view.findViewById(R.id.bottom_navigation_item_icon);
 			TextView title = (TextView) view.findViewById(R.id.bottom_navigation_item_title);
 
@@ -361,6 +361,17 @@ public class AHBottomNavigation extends FrameLayout {
 			LayoutParams params = new LayoutParams((int) itemWidth, (int) height);
 			linearLayout.addView(view, params);
 			views.add(view);
+		}
+
+		int separatorWidth = (int) (0.5 * getResources().getDisplayMetrics().density);
+		int separatorHeight = (int) (40 * getResources().getDisplayMetrics().density);
+
+		leni = items.size() - 1;
+		for (int i = 0; i < leni; i++) {
+			View separator = new View(context);
+			separator.setBackgroundColor(Color.LTGRAY);
+			LayoutParams params = new LayoutParams(separatorWidth, separatorHeight);
+			linearLayout.addView(separator, leni - i, params);
 		}
 	}
 
