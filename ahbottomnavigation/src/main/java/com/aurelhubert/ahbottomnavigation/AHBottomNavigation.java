@@ -207,13 +207,23 @@ public class AHBottomNavigation extends FrameLayout {
 			bottomNavigationHeight = layoutHeight;
 		}
 
+		LinearLayout verticalLayout = new LinearLayout(context);
+		verticalLayout.setOrientation(LinearLayout.VERTICAL);
+
+		View line = new View(context);
+		line.setBackgroundColor(Color.LTGRAY);
+		LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDisplayMetrics().density);
+		verticalLayout.addView(line, params);
+
 		linearLayoutContainer = new LinearLayout(context);
 		linearLayoutContainer.setOrientation(LinearLayout.HORIZONTAL);
 		linearLayoutContainer.setGravity(Gravity.CENTER);
 
 		LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, layoutHeight);
-		addView(linearLayoutContainer, layoutParams);
+		verticalLayout.addView(linearLayoutContainer, layoutParams);
 		createClassicItems(linearLayoutContainer);
+
+		addView(verticalLayout, new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
 		// Force a request layout after all the items have been created
 		post(new Runnable() {
