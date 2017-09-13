@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -76,8 +75,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 	// Variables (Styles)
 	private Typeface titleTypeface;
-	private int defaultBackgroundColor = Color.WHITE;
-	private int defaultBackgroundResource = 0;
+	private int defaultBackgroundColor = Color.TRANSPARENT;
 	private @ColorInt int itemActiveColor;
 	private @ColorInt int itemInactiveColor;
 	private @ColorInt int titleColorActive;
@@ -207,23 +205,21 @@ public class AHBottomNavigation extends FrameLayout {
 			bottomNavigationHeight = layoutHeight;
 		}
 
-		LinearLayout verticalLayout = new LinearLayout(context);
-		verticalLayout.setOrientation(LinearLayout.VERTICAL);
-
-		View line = new View(context);
-		line.setBackgroundColor(Color.LTGRAY);
-		LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDisplayMetrics().density);
-		verticalLayout.addView(line, params);
-
 		linearLayoutContainer = new LinearLayout(context);
 		linearLayoutContainer.setOrientation(LinearLayout.HORIZONTAL);
 		linearLayoutContainer.setGravity(Gravity.CENTER);
 
-		LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, layoutHeight);
-		verticalLayout.addView(linearLayoutContainer, layoutParams);
 		createClassicItems(linearLayoutContainer);
 
-		addView(verticalLayout, new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+		LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, layoutHeight);
+		layoutParams.gravity = Gravity.BOTTOM;
+		addView(linearLayoutContainer, layoutParams);
+
+		ImageView imageView = new ImageView(getContext());
+		imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+		imageView.setImageResource(R.drawable.home_circle);
+		imageView.setScaleType(ImageView.ScaleType.CENTER);
+		addView(imageView);
 
 		// Force a request layout after all the items have been created
 		post(new Runnable() {
@@ -238,11 +234,6 @@ public class AHBottomNavigation extends FrameLayout {
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	private int calculateHeight(int layoutHeight) {
 		if(!translucentNavigationEnabled) return layoutHeight;
-
-		int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-		if (resourceId > 0) {
-			navigationBarHeight = resources.getDimensionPixelSize(resourceId);
-		}
 
 		int[] attrs = {android.R.attr.fitsSystemWindows, android.R.attr.windowTranslucentNavigation};
 		TypedArray typedValue = getContext().getTheme().obtainStyledAttributes(attrs);
@@ -345,15 +336,11 @@ public class AHBottomNavigation extends FrameLayout {
 
 			if (colored) {
 				if (current) {
-					setBackgroundColor(item.getColor(context));
+					linearLayoutContainer.setBackgroundColor(item.getColor(context));
 					currentColor = item.getColor(context);
 				}
 			} else {
-				if (defaultBackgroundResource != 0) {
-					setBackgroundResource(defaultBackgroundResource);
-				} else {
-					setBackgroundColor(defaultBackgroundColor);
-				}
+				linearLayoutContainer.setBackgroundColor(defaultBackgroundColor);
 			}
 
 			icon.setImageDrawable(AHHelper.getTintDrawable(items.get(i).getDrawable(context),
@@ -371,17 +358,6 @@ public class AHBottomNavigation extends FrameLayout {
 			LayoutParams params = new LayoutParams((int) itemWidth, (int) height);
 			linearLayout.addView(view, params);
 			views.add(view);
-		}
-
-		int separatorWidth = (int) (0.5 * getResources().getDisplayMetrics().density);
-		int separatorHeight = (int) (40 * getResources().getDisplayMetrics().density);
-
-		leni = items.size() - 1;
-		for (int i = 0; i < leni; i++) {
-			View separator = new View(context);
-			separator.setBackgroundColor(Color.LTGRAY);
-			LayoutParams params = new LayoutParams(separatorWidth, separatorHeight);
-			linearLayout.addView(separator, leni - i, params);
 		}
 	}
 
@@ -439,7 +415,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 					if (circleRevealAnim != null && circleRevealAnim.isRunning()) {
 						circleRevealAnim.cancel();
-						setBackgroundColor(items.get(itemIndex).getColor(context));
+						linearLayoutContainer.setBackgroundColor(items.get(itemIndex).getColor(context));
 						backgroundColorView.setBackgroundColor(Color.TRANSPARENT);
 					}
 
@@ -453,7 +429,7 @@ public class AHBottomNavigation extends FrameLayout {
 
 						@Override
 						public void onAnimationEnd(Animator animation) {
-							setBackgroundColor(items.get(itemIndex).getColor(context));
+							linearLayoutContainer.setBackgroundColor(items.get(itemIndex).getColor(context));
 							backgroundColorView.setBackgroundColor(Color.TRANSPARENT);
 						}
 
@@ -470,11 +446,7 @@ public class AHBottomNavigation extends FrameLayout {
 					AHHelper.updateViewBackgroundColor(this, currentColor,
 							items.get(itemIndex).getColor(context));
 				} else {
-					if (defaultBackgroundResource != 0) {
-						setBackgroundResource(defaultBackgroundResource);
-					} else {
-						setBackgroundColor(defaultBackgroundColor);
-					}
+					linearLayoutContainer.setBackgroundColor(defaultBackgroundColor);
 					backgroundColorView.setBackgroundColor(Color.TRANSPARENT);
 				}
 
@@ -495,16 +467,12 @@ public class AHBottomNavigation extends FrameLayout {
 		if (currentItem > 0 && currentItem < items.size()) {
 			currentColor = items.get(currentItem).getColor(context);
 		} else if (currentItem == CURRENT_ITEM_NONE) {
-			if (defaultBackgroundResource != 0) {
-				setBackgroundResource(defaultBackgroundResource);
-			} else {
-				setBackgroundColor(defaultBackgroundColor);
-			}
+			linearLayoutContainer.setBackgroundColor(defaultBackgroundColor);
 			backgroundColorView.setBackgroundColor(Color.TRANSPARENT);
 		}
 	}
 
-	////////////
+////////////
 	// PUBLIC //
 	////////////
 
@@ -597,16 +565,6 @@ public class AHBottomNavigation extends FrameLayout {
 	 */
 	public void setDefaultBackgroundColor(@ColorInt int defaultBackgroundColor) {
 		this.defaultBackgroundColor = defaultBackgroundColor;
-	}
-
-	/**
-	 * Set the bottom navigation background resource
-	 *
-	 * @param defaultBackgroundResource The bottom navigation background resource
-	 */
-	public void setDefaultBackgroundResource(@DrawableRes int defaultBackgroundResource) {
-		this.defaultBackgroundResource = defaultBackgroundResource;
-		createItems();
 	}
 
 	/**
