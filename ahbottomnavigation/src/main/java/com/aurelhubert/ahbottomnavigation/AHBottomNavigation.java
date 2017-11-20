@@ -203,15 +203,7 @@ public class AHBottomNavigation extends FrameLayout {
 		backgroundLayoutParams.gravity = Gravity.BOTTOM;
 		addView(backgroundColorView, backgroundLayoutParams);
 		bottomNavigationHeight = layoutHeight;
-
-		ImageView imageView = new ImageView(getContext());
-		LinearLayout.LayoutParams imageLayouParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		imageLayouParams.gravity = Gravity.TOP;
-		imageView.setLayoutParams(imageLayouParams);
-		imageView.setImageResource(R.drawable.home_circle);
-		imageView.setScaleType(ImageView.ScaleType.CENTER);
-		addView(imageView);
-
+		
 		linearLayoutContainer = new LinearLayout(context);
 		linearLayoutContainer.setOrientation(LinearLayout.HORIZONTAL);
 		linearLayoutContainer.setGravity(Gravity.CENTER);
